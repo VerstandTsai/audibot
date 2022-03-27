@@ -17,6 +17,6 @@ async def on_message(message):
         url = message.content.split()[1]
         subprocess.run(f'yt-dlp --extract-audio --audio-format mp3 -o audio.mp3 {url}'.split())
         await message.channel.send(file=discord.File('audio.mp3'))
-        subprocess.run('rm audio.mp3'.split())
+        os.remove('audio.mp3')
 
 client.run(os.getenv('TOKEN'))
