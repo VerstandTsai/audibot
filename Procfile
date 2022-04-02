@@ -1,1 +1,1 @@
-web: python3 audibot.py & gunicorn app:app
+web: python3 waker.py & python3 audibot.py & gunicorn app:app
