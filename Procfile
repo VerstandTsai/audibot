@@ -1,1 +1,1 @@
-worker: python3 audibot.py
+web: python3 audibot.py & gunicorn app:app
