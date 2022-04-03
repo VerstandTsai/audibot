@@ -9,7 +9,7 @@ bot = commands.Bot(command_prefix='!')
 
 @bot.event
 async def on_ready():
-    print(f'The bot has logged in as {client.user}.')
+    print(f'The bot has logged in as {bot.user}.')
 
 @bot.command()
 async def getaudio(ctx, url):
