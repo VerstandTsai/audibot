@@ -61,12 +61,12 @@ async def getvideo(ctx, url):
     if len(os.listdir(download_folder)) > 5:
         rmtree(download_folder)
         os.mkdir(download_folder)
+    info = YoutubeDL({}).extract_info(url, download=False)
     ydl_opts = {
             'format': 'mp4',
             'outtmpl': f'./downloads/{info["id"]}.mp4'
     }
     with YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
         await ctx.send(f'正在下載{info["title"]}...')
         ydl.download([url])
     await ctx.send(
