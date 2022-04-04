@@ -102,7 +102,7 @@ async def play(ctx, arg=None):
             playlist = json.load(fp)
         index = int(arg)-1
         title = playlist[index]['title']
-        vc.play(discord.FFmpegPCMAudio('./playlists/{ctx.guild.id}/{playlist[index]["file"]}'))
+        vc.play(discord.FFmpegPCMAudio(f'./playlists/{ctx.guild.id}/{playlist[index]["file"]}'))
         await ctx.send(f'現正播放 {title}')
     else:
         ydl_opts = {
