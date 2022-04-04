@@ -97,7 +97,13 @@ async def play(ctx, arg=None):
     if arg == None:
         pass
     elif arg.isdigit():
-        pass
+        playlist = []
+        with open(f'./playlists/{ctx.guild.id}/playlist.json', 'r') as fp:
+            playlist = json.load(fp)
+        index = int(arg)-1
+        title = playlist[index]['title']
+        vc.play(discord.FFmpegPCMAudio('./playlists/{ctx.guild.id}/{playlist[index]["file"]}'))
+        await ctx.send(f'現正播放 {title}')
     else:
         ydl_opts = {
                 'format': 'bestaudio',
@@ -171,7 +177,7 @@ async def add(ctx, url):
     playlist.append(song)
     with open(f'./playlists/{ctx.guild.id}/playlist.json', 'w') as fp:
         json.dump(playlist, fp)
-    await ctx.send(f'已將 {info["title"]} 加入清單中')
+    await ctx.send(f'已將 {song["title"]} 加入清單中')
 
 @bot.command()
 async def pop(ctx, num):
@@ -179,10 +185,11 @@ async def pop(ctx, num):
     with open(f'./playlists/{ctx.guild.id}/playlist.json', 'r') as fp:
         playlist = json.load(fp)
     index = int(num)-1
+    title = playlist[index]['title']
     os.remove(f'./playlists/{ctx.guild.id}/{playlist[index]["file"]}')
     playlist.pop(index)
     with open(f'./playlists/{ctx.guild.id}/playlist.json', 'w') as fp:
         json.dump(playlist, fp)
-    await ctx.send(f'已將 {info["title"]} 自清單中移除')
+    await ctx.send(f'已將 {title} 自清單中移除')
 
 bot.run(os.getenv('TOKEN'))
