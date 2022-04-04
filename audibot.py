@@ -50,7 +50,7 @@ async def getaudio(ctx, url):
     }
     with YoutubeDL(ydl_opts) as ydl:
         title = ydl.extract_info(url, download=False)['title']
-        await ctx.send(f'正在下載 {title}...')
+        await ctx.send(f'正在下載 {title}')
         ydl.download([url])
     await ctx.send(file=discord.File('audio.mp3'))
     os.remove('audio.mp3')
@@ -67,7 +67,7 @@ async def getvideo(ctx, url):
             'outtmpl': f'./downloads/{info["id"]}.mp4'
     }
     with YoutubeDL(ydl_opts) as ydl:
-        await ctx.send(f'正在下載 {info["title"]}...')
+        await ctx.send(f'正在下載 {info["title"]}')
         ydl.download([url])
     await ctx.send(
             '下載完成，點擊以下連結以下載\n'
@@ -107,12 +107,14 @@ async def play(ctx, arg=None):
                 }],
                 'outtmpl': 'audio.mp3'
         }
+        title = ''
         with YoutubeDL(ydl_opts) as ydl:
             title = ydl.extract_info(arg, download=False)['title']
-            await ctx.send(f'正在獲取 {title}...')
+            await ctx.send(f'正在獲取 {title}')
             ydl.download([arg])
         vc.play(discord.FFmpegPCMAudio('audio.mp3'))
         os.remove('audio.mp3')
+        await ctx.send(f'現正播放 {title}')
 
 @bot.command()
 async def pause(ctx):
@@ -157,7 +159,7 @@ async def add(ctx, url):
             }],
             'outtmpl': f'./playlists/{ctx.guild.id}/{info["id"]}.mp3'
     }
-    await ctx.send(f'正在加入 {info["title"]}...')
+    await ctx.send(f'正在加入 {info["title"]}')
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
     playlist = []
@@ -169,14 +171,18 @@ async def add(ctx, url):
     playlist.append(song)
     with open(f'./playlists/{ctx.guild.id}/playlist.json', 'w') as fp:
         json.dump(playlist, fp)
+    await ctx.send(f'已將 {info["title"]} 加入清單中')
 
 @bot.command()
 async def pop(ctx, num):
     playlist = []
     with open(f'./playlists/{ctx.guild.id}/playlist.json', 'r') as fp:
         playlist = json.load(fp)
-    playlist.pop(int(num)-1)
+    index = int(num)-1
+    os.remove(f'./playlists/{ctx.guild.id}/{playlist[index]["file"]}')
+    playlist.pop(index)
     with open(f'./playlists/{ctx.guild.id}/playlist.json', 'w') as fp:
         json.dump(playlist, fp)
+    await ctx.send(f'已將 {info["title"]} 自清單中移除')
 
 bot.run(os.getenv('TOKEN'))
