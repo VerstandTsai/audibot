@@ -110,7 +110,7 @@ async def play(ctx, arg=None):
         with YoutubeDL(ydl_opts) as ydl:
             title = ydl.extract_info(arg, download=False)['title']
             await ctx.send(f'正在獲取 {title}...')
-            ydl.download([url])
+            ydl.download([arg])
         vc.play(discord.FFmpegPCMAudio('audio.mp3'))
         os.remove('audio.mp3')
 
