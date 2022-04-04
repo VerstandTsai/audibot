@@ -40,8 +40,6 @@ async def help(ctx, botname):
 '''
 @bot.command()
 async def getaudio(ctx, url):
-    title = ydl.extract_info(url, download=False)['title']
-    await ctx.send(f'正在下載{title}...')
     ydl_opts = {
             'format': 'bestaudio',
             'postprocessors': [{
@@ -51,6 +49,8 @@ async def getaudio(ctx, url):
             'outtmpl': 'audio.mp3'
     }
     with YoutubeDL(ydl_opts) as ydl:
+        title = ydl.extract_info(url, download=False)['title']
+        await ctx.send(f'正在下載{title}...')
         ydl.download([url])
     await ctx.send(file=discord.File('audio.mp3'))
     os.remove('audio.mp3')
@@ -61,13 +61,13 @@ async def getvideo(ctx, url):
     if len(os.listdir(download_folder)) > 5:
         rmtree(download_folder)
         os.mkdir(download_folder)
-    info = ydl.extract_info(url, download=False)
-    await ctx.send(f'正在下載{info["title"]}...')
     ydl_opts = {
             'format': 'mp4',
             'outtmpl': f'./downloads/{info["id"]}.mp4'
     }
     with YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)
+        await ctx.send(f'正在下載{info["title"]}...')
         ydl.download([url])
     await ctx.send(
             '下載完成，點擊以下連結以下載\n'
