@@ -4,7 +4,6 @@ from yt_dlp import YoutubeDL
 import os
 import json
 from shutil import rmtree
-from secrets import token_urlsafe
 
 bot = commands.Bot(command_prefix='!')
 
@@ -41,7 +40,8 @@ async def help(ctx, botname):
 '''
 @bot.command()
 async def getaudio(ctx, url):
-    await ctx.send('正在下載音訊...')
+    title = ydl.extract_info(url, download=False)['title']
+    await ctx.send(f'正在下載{title}...')
     ydl_opts = {
             'format': 'bestaudio',
             'postprocessors': [{
@@ -61,17 +61,17 @@ async def getvideo(ctx, url):
     if len(os.listdir(download_folder)) > 5:
         rmtree(download_folder)
         os.mkdir(download_folder)
-    await ctx.send('正在下載影片...')
-    video_id = token_urlsafe(6)
+    info = ydl.extract_info(url, download=False)
+    await ctx.send(f'正在下載{info["title"]}...')
     ydl_opts = {
             'format': 'mp4',
-            'outtmpl': f'./downloads/{video_id}.mp4'
+            'outtmpl': f'./downloads/{info["id"]}.mp4'
     }
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
     await ctx.send(
-            f'下載完成，點擊以下連結以下載\n'
-            f'https://audibot-discord.herokuapp.com/downloads/{video_id}'
+            '下載完成，點擊以下連結以下載\n'
+            f'https://audibot-discord.herokuapp.com/downloads/{info["id"]}'
     )
 '''
 @bot.command()
@@ -81,7 +81,7 @@ async def join(ctx):
         return
     await ctx.author.voice.channel.connect()
     os.mkdir(f'./playlists/{ctx.guild.id}')
-    with open(f'./playlists/{ctx.guild.id}/filelist.json', 'w') as fp:
+    with open(f'./playlists/{ctx.guild.id}/playlist.json', 'w') as fp:
         pass
 
 @bot.command()
@@ -120,6 +120,12 @@ async def list(ctx):
     playlist = []
     with open(f'./playlists/{ctx.guild.id}/playlist.json', 'r') as fp:
         playlist = json.load(fp)
+    liststr = ''
+    for i in range(len(playlist)):
+        liststr += f'{i+1}. '
+        liststr += playlist[i]['title']
+        liststr += '\n'
+    await ctx.send(liststr)
 
 @bot.command()
 async def add(ctx, url):
