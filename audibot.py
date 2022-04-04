@@ -12,11 +12,11 @@ bot = commands.Bot(command_prefix='!')
 async def on_ready():
     print(f'The bot has logged in as {bot.user}.')
 
+'''
 @bot.command()
 async def help(ctx, botname):
     if botname != bot.user.name:
         return
-    '''
     await ctx.send(
             '資訊與說明：\n'
             '!help               列出此訊息\n'
@@ -37,8 +37,8 @@ async def help(ctx, botname):
             '!list               列出目前清單中的音樂\n'
             '!add <網址>         將網址中的音樂加入清單中\n'
             '!pop <編號>         將清單中該編號的音樂刪去'
-    )'''
-
+    )
+'''
 @bot.command()
 async def getaudio(ctx, url):
     await ctx.send('正在下載音訊...')
