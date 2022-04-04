@@ -65,7 +65,7 @@ async def getvideo(ctx, url):
     video_id = token_urlsafe(6)
     ydl_opts = {
             'format': 'mp4',
-            'outtmpl': f'{video_id}.mp4'
+            'outtmpl': f'./downloads/{video_id}.mp4'
     }
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
