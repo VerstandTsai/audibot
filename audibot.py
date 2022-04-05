@@ -12,6 +12,7 @@ queues = {}
 async def on_ready():
     print(f'The bot has logged in as {bot.user}.')
 
+'''
 @bot.command()
 async def help(ctx, botname):
     if botname != bot.user.name:
@@ -33,6 +34,7 @@ async def help(ctx, botname):
         '!queue              列出目前清單中的音樂\n'
         '!pop <編號>         將清單中該編號的音樂刪去'
     )
+'''
 
 @bot.command()
 async def getaudio(ctx, url):
