@@ -110,7 +110,7 @@ async def play(ctx, url):
     if not vc.is_playing():
         vc.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
         os.remove(filepath)
-        ctx.send(f'現正播放 {info["title"]}')
+        await ctx.send(f'現正播放 {info["title"]}')
         return
 
     song = {}
@@ -126,7 +126,7 @@ def play_next(ctx):
     title = queues[guild_id][0]['title']
     filename = queues[guild_id][0]['filename']
     filepath = f'./queues/{guild_id}/{filename}'
-    vc.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
+    ctx.voice_client.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
     os.remove(filepath)
     queues[guild_id].pop(0)
 
