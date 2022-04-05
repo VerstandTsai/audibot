@@ -12,7 +12,6 @@ queues = {}
 async def on_ready():
     print(f'The bot has logged in as {bot.user}.')
 
-'''
 @bot.command()
 async def help(ctx, botname):
     if botname != bot.user.name:
@@ -29,12 +28,12 @@ async def help(ctx, botname):
         '!play <網址>        播放網址中的音樂\n'
         '!pause              暫停播放音樂\n'
         '!resume             繼續播放音樂\n'
-        '!stop               停止播放音樂\n'
-        '!skip               播放清單中的下一首音樂\n'
+        '!stop               停止播放音樂並清空播放清單\n'
+        '!skip               跳過並播放清單中的下一首音樂\n'
         '!queue              列出目前清單中的音樂\n'
         '!pop <編號>         將清單中該編號的音樂刪去'
     )
-'''
+
 @bot.command()
 async def getaudio(ctx, url):
     ydl_opts = {
@@ -136,6 +135,8 @@ async def pause(ctx):
     if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
+    if vc.is_playing():
+        vc.pause()
 
 @bot.command()
 async def resume(ctx):
@@ -143,6 +144,8 @@ async def resume(ctx):
     if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
+    if vc.is_paused():
+        vc.resume()
 
 @bot.command()
 async def stop(ctx):
@@ -150,6 +153,9 @@ async def stop(ctx):
     if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
+    if vc.is_playing():
+        vc.stop()
+        queues[str(ctx.guild.id)] = []
 
 @bot.command()
 async def skip(ctx):
@@ -157,6 +163,14 @@ async def skip(ctx):
     if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
+    if vc.is_playing():
+        vc.stop()
+        guild_id = str(ctx.guild.id)
+        filename = queues[guild_id][0]['filename']
+        filepath = f'./queues/{guild_id}/{filename}'
+        os.remove(filepath)
+        queues[guild_id].pop(0)
+        play_next(ctx)
 
 @bot.command()
 async def queue(ctx):
