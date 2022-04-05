@@ -166,6 +166,7 @@ async def skip(ctx):
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
     if vc.is_playing():
+        vc.pause()
         play_next(ctx)
 
 @bot.command()
