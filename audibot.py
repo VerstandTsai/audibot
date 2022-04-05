@@ -18,21 +18,21 @@ async def help(ctx, botname):
     if botname != bot.user.name:
         return
     await ctx.send(
-            '資訊與說明：\n'
-            f'!help {bot.user.name}       列出此訊息\n'
-            '下載音訊、影片：\n'
-            '!getaudio <網址>    下載 mp3 音訊\n'
-            '!getvideo <網址>    下載 mp4 影片\n'
-            '在語音頻道中播放音樂：\n'
-            f'!join               讓{bot.user.name}加入您所在的語音頻道\n'
-            f'!leave              讓{bot.user.name}離開語音頻道\n'
-            '!play <網址>        播放網址中的音樂\n'
-            '!pause              暫停播放音樂\n'
-            '!resume             繼續播放音樂\n'
-            '!stop               停止播放音樂\n'
-            '!skip               播放清單中的下一首音樂\n'
-            '!queue              列出目前清單中的音樂\n'
-            '!pop <編號>         將清單中該編號的音樂刪去'
+        '資訊與說明：\n'
+        f'!help {bot.user.name}       列出此訊息\n'
+        '下載音訊、影片：\n'
+        '!getaudio <網址>    下載 mp3 音訊\n'
+        '!getvideo <網址>    下載 mp4 影片\n'
+        '在語音頻道中播放音樂：\n'
+        f'!join               讓{bot.user.name}加入您所在的語音頻道\n'
+        f'!leave              讓{bot.user.name}離開語音頻道\n'
+        '!play <網址>        播放網址中的音樂\n'
+        '!pause              暫停播放音樂\n'
+        '!resume             繼續播放音樂\n'
+        '!stop               停止播放音樂\n'
+        '!skip               播放清單中的下一首音樂\n'
+        '!queue              列出目前清單中的音樂\n'
+        '!pop <編號>         將清單中該編號的音樂刪去'
     )
 '''
 @bot.command()
@@ -93,7 +93,7 @@ async def leave(ctx):
 @bot.command()
 async def play(ctx, url):
     vc = ctx.voice_client
-    if not vc.is_connected():
+    if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
 
@@ -133,34 +133,34 @@ def play_next(ctx):
 @bot.command()
 async def pause(ctx):
     vc = ctx.voice_client
-    if not vc.is_connected():
+    if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
 
 @bot.command()
 async def resume(ctx):
     vc = ctx.voice_client
-    if not vc.is_connected():
+    if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
 
 @bot.command()
 async def stop(ctx):
     vc = ctx.voice_client
-    if not vc.is_connected():
+    if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
 
 @bot.command()
 async def skip(ctx):
     vc = ctx.voice_client
-    if not vc.is_connected():
+    if vc == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
 
 @bot.command()
 async def queue(ctx):
-    if not ctx.voice_client.is_connected():
+    if ctx.voice_client == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
     queue = queues[str(ctx.guild.id)]
@@ -176,7 +176,7 @@ async def queue(ctx):
 
 @bot.command()
 async def pop(ctx, num):
-    if not ctx.voice_client.is_connected():
+    if ctx.voice_client == None:
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
     guild_id = str(ctx.guild.id)
