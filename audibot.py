@@ -5,14 +5,13 @@ import os
 import asyncio
 from shutil import rmtree
 
-bot = commands.Bot(command_prefix='!')
+bot = commands.Bot(command_prefix='!', help_command=None)
 queues = {}
 
 @bot.event
 async def on_ready():
     print(f'The bot has logged in as {bot.user}.')
 
-'''
 @bot.command()
 async def help(ctx, botname):
     if botname != bot.user.name:
@@ -34,7 +33,6 @@ async def help(ctx, botname):
         '!queue              列出目前清單中的音樂\n'
         '!pop <編號>         將清單中該編號的音樂刪去'
     )
-'''
 
 @bot.command()
 async def getaudio(ctx, url):
@@ -139,6 +137,7 @@ async def pause(ctx):
         return
     if vc.is_playing():
         vc.pause()
+        await ctx.send('音樂已暫停')
 
 @bot.command()
 async def resume(ctx):
@@ -158,6 +157,7 @@ async def stop(ctx):
     if vc.is_playing():
         vc.stop()
         queues[str(ctx.guild.id)] = []
+        await ctx.send('已停止播放音樂')
 
 @bot.command()
 async def skip(ctx):
@@ -167,11 +167,6 @@ async def skip(ctx):
         return
     if vc.is_playing():
         vc.stop()
-        guild_id = str(ctx.guild.id)
-        filename = queues[guild_id][0]['filename']
-        filepath = f'./queues/{guild_id}/{filename}'
-        os.remove(filepath)
-        queues[guild_id].pop(0)
         play_next(ctx)
 
 @bot.command()
