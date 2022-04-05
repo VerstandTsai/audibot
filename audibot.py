@@ -182,7 +182,7 @@ async def pop(ctx, num):
     guild_id = str(ctx.guild.id)
     index = int(num)-1
     title = queues[guild_id][index]['title']
-    os.remove(f'./queues/{guild_id}/{queues[guild_id][index]["file"]}')
+    os.remove(f'./queues/{guild_id}/{queues[guild_id][index]["filename"]}')
     queues[guild_id].pop(index)
     await ctx.send(f'已將 {title} 自清單中移除')
 
