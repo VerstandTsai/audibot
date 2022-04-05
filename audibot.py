@@ -17,6 +17,7 @@ async def help(ctx, botname):
     if botname != bot.user.name:
         return
     await ctx.send(
+        '```'
         '資訊與說明：\n'
         f'!help {bot.user.name}       列出此訊息\n'
         '下載音訊、影片：\n'
@@ -32,6 +33,7 @@ async def help(ctx, botname):
         '!skip               跳過並播放清單中的下一首音樂\n'
         '!queue              列出目前清單中的音樂\n'
         '!pop <編號>         將清單中該編號的音樂刪去'
+        '```'
     )
 
 @bot.command()
@@ -155,8 +157,8 @@ async def stop(ctx):
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
     if vc.is_playing():
-        vc.stop()
         queues[str(ctx.guild.id)] = []
+        vc.stop()
         await ctx.send('已停止播放音樂')
 
 @bot.command()
@@ -166,8 +168,7 @@ async def skip(ctx):
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
     if vc.is_playing():
-        vc.pause()
-        play_next(ctx)
+        vc.stop()
 
 @bot.command()
 async def queue(ctx):
