@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from yt_dlp import YoutubeDL
 import os
-import asyncio
 from shutil import rmtree
 
 bot = commands.Bot(command_prefix='!', help_command=None)
@@ -39,12 +38,12 @@ async def help(ctx, botname):
 @bot.command()
 async def getaudio(ctx, url):
     ydl_opts = {
-            'format': 'bestaudio',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3'
-            }],
-            'outtmpl': 'audio.mp3'
+        'format': 'bestaudio',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3'
+        }],
+        'outtmpl': 'audio.mp3'
     }
     with YoutubeDL(ydl_opts) as ydl:
         title = ydl.extract_info(url, download=False)['title']
@@ -61,15 +60,15 @@ async def getvideo(ctx, url):
         os.mkdir(download_folder)
     info = YoutubeDL({}).extract_info(url, download=False)
     ydl_opts = {
-            'format': 'mp4',
-            'outtmpl': f'./downloads/{info["id"]}.mp4'
+        'format': 'mp4',
+        'outtmpl': f'./downloads/{info["id"]}.mp4'
     }
     with YoutubeDL(ydl_opts) as ydl:
         await ctx.send(f'正在下載 {info["title"]}')
         ydl.download([url])
     await ctx.send(
-            '下載完成，點擊以下連結以下載\n'
-            f'https://audibot-discord.herokuapp.com/downloads/{info["id"]}'
+        '下載完成，點擊以下連結以下載\n'
+        f'https://audibot-discord.herokuapp.com/downloads/{info["id"]}'
     )
 
 @bot.command()
@@ -121,13 +120,14 @@ async def play(ctx, url):
     await ctx.send(f'已將 {info["title"]} 加入清單中')
 
 def play_next(ctx):
+    vc = ctx.voice_client
     guild_id = str(ctx.guild.id)
     if len(queues[guild_id]) == 0:
         return
     title = queues[guild_id][0]['title']
     filename = queues[guild_id][0]['filename']
     filepath = f'./queues/{guild_id}/{filename}'
-    ctx.voice_client.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
+    vc.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
     os.remove(filepath)
     queues[guild_id].pop(0)
 
@@ -158,6 +158,8 @@ async def stop(ctx):
         return
     if vc.is_playing():
         queues[str(ctx.guild.id)] = []
+        rmtree(f'./queues/{guild_id}')
+        os.mkdir(f'./queues/{guild_id}')
         vc.stop()
         await ctx.send('已停止播放音樂')
 
