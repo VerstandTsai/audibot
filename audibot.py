@@ -128,7 +128,6 @@ def play_next(ctx):
     filename = queues[guild_id][0]['filename']
     filepath = f'./queues/{guild_id}/{filename}'
     vc.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
-    #os.remove(filepath)
     queues[guild_id].pop(0)
 
 @bot.command()
@@ -157,7 +156,8 @@ async def stop(ctx):
         await ctx.send(f'請先用!join讓{bot.user.name}加入語音頻道')
         return
     if vc.is_playing():
-        queues[str(ctx.guild.id)] = []
+        guild_id = str(ctx.guild.id)
+        queues[guild_id] = []
         rmtree(f'./queues/{guild_id}')
         os.mkdir(f'./queues/{guild_id}')
         vc.stop()
