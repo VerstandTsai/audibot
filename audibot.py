@@ -128,7 +128,7 @@ def play_next(ctx):
     filename = queues[guild_id][0]['filename']
     filepath = f'./queues/{guild_id}/{filename}'
     vc.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
-    os.remove(filepath)
+    #os.remove(filepath)
     queues[guild_id].pop(0)
 
 @bot.command()
