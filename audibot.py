@@ -109,7 +109,6 @@ async def play(ctx, url):
             ydl.download([url])
     if not vc.is_playing():
         vc.play(discord.FFmpegPCMAudio(filepath), after=lambda e: play_next(ctx))
-        os.remove(filepath)
         await ctx.send(f'現正播放 {info["title"]}')
         return
 
