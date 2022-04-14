@@ -7,6 +7,7 @@ from shutil import rmtree
 
 bot = commands.Bot(command_prefix='!', help_command=None)
 queues = {}
+website = 'https://audibot.justintsai2.repl.co'
 
 @bot.event
 async def on_ready():
@@ -19,14 +20,14 @@ async def help(ctx, botname):
     await ctx.send(
         '```'
         '資訊與說明：\n'
-        f'!help {bot.user.name}             列出此訊息\n'
+        f'!help {bot.user.name}              列出此訊息\n'
         '下載音訊、影片：\n'
-        '!getaudio <網址/關鍵字>    下載 mp3 音訊\n'
-        '!getvideo <網址/關鍵字>    下載 mp4 影片\n'
+        '!getaudio <網址/關鍵字>     下載 mp3 音訊\n'
+        '!getvideo <網址/關鍵字>     下載 mp4 影片\n'
         '在語音頻道中播放音樂：\n'
-        f'!join                     讓{bot.user.name}加入您所在的語音頻道\n'
-        f'!leave                    讓{bot.user.name}離開語音頻道\n'
-        '!play <網址/關鍵字>        播放指定的音樂\n'
+        f'!join                      讓{bot.user.name}加入您所在的語音頻道\n'
+        f'!leave                     讓{bot.user.name}離開語音頻道\n'
+        '!play <網址/關鍵字>         播放指定的音樂\n'
         '!pause                     暫停播放音樂\n'
         '!resume                    繼續播放音樂\n'
         '!stop                      停止播放音樂並清空播放清單\n'
@@ -87,7 +88,7 @@ async def getvideo(ctx, *, arg):
         ydl.download([arg if is_url else f'ytsearch:{arg}'])
     await ctx.send(
         '下載完成，點擊以下連結以下載\n'
-        f'https://audibot-discord.herokuapp.com/downloads/{info["id"]}'
+        f'{website}/downloads/{info["id"]}'
     )
 
 @bot.command()
