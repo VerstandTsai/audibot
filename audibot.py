@@ -4,6 +4,7 @@ from yt_dlp import YoutubeDL
 import requests
 import os
 from shutil import rmtree
+import asyncio
 
 bot = commands.Bot(command_prefix='!', help_command=None)
 queues = {}
@@ -12,6 +13,9 @@ website = 'https://audibot.justintsai2.repl.co'
 @bot.event
 async def on_ready():
     print(f'The bot has logged in as {bot.user}.')
+    while True:
+        await asyncio.sleep(10*60)
+        requests.get(website)
 
 @bot.command()
 async def help(ctx, botname):
