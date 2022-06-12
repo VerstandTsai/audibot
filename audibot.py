@@ -8,7 +8,7 @@ import asyncio
 
 bot = commands.Bot(command_prefix='!', help_command=None)
 queues = {}
-website = 'https://audibot.justintsai2.repl.co'
+website = 'https://audibot-discord.herokuapp.com'
 
 @bot.event
 async def on_ready():
