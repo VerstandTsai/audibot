@@ -47,7 +47,7 @@ async def morse(ctx, *, arg):
     async with ctx.typing():
         morse_obj = Morse(0.05, 44100, 700)
         morse_obj.fromtext(arg)
-        morse.export('morse.wav')
+        morse_obj.export('morse.wav')
     await ctx.send(file=discord.File('morse.wav'))
     os.remove('morse.wav')
 
