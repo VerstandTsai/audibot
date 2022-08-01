@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from yt_dlp import YoutubeDL
+from morse import Morse
 import requests
 import os
 from shutil import rmtree
@@ -40,6 +41,15 @@ async def help(ctx, botname):
         '!pop <編號>                將清單中該編號的音樂刪去'
         '```'
     )
+
+@bot.command()
+async def morse(ctx, *, arg):
+    async with ctx.typing():
+        morse_obj = Morse(0.05, 44100, 700)
+        morse_obj.fromtext(arg)
+        morse.export('morse.wav')
+    await ctx.send(file=discord.File('morse.wav'))
+    os.remove('morse.wav')
 
 @bot.command()
 async def getaudio(ctx, *, arg):
