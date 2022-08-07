@@ -2,7 +2,7 @@ import wave
 import numpy as np
 
 class Morse:
-    def __init__(self, unittime, samplerate, frequency):
+    def __init__(self, unittime=0.05, samplerate=44100, frequency=700):
         self.audio = np.array([])
         self.unittime = unittime
         self.samplerate = samplerate
@@ -32,12 +32,12 @@ class Morse:
 
     def add_note(self, length, isrest):
         t = np.linspace(0, length, int(self.samplerate * length))
-        channel = np.sin(2 * np.pi * int(not isrest) * self.frequency * t)
+        channel = 0.5 * np.sin(2 * np.pi * int(not isrest) * self.frequency * t)
         note = np.array([channel]).T
         self.audio = np.append(self.audio, note)
-        self.audio = self.audio.reshape(self.audio.shape[0], 1)
 
     def fromtext(self, text):
+        self.audio = np.array([])
         text = text.upper()
         for c in text:
             if c == ' ':
@@ -53,7 +53,8 @@ class Morse:
                 self.add_note(self.unittime, True)
             self.add_note(self.unittime * 2, True)
 
-    def export(self, filename):
+    def export(self, filename, noise=0):
+        self.audio += noise * (np.random.rand(self.audio.size) - 0.5)
         soundbytes = (self.audio * (2 ** 15 - 1)).astype('<h').tobytes()
         with wave.open(filename, 'w') as f:
             f.setnchannels(1)
@@ -62,7 +63,7 @@ class Morse:
             f.writeframes(soundbytes)
 
 if __name__ == '__main__':
-    morse = Morse(0.05, 44100, 700)
-    morse.fromtext("All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.")
-    morse.export('morse.wav')
+    morse = Morse()
+    morse.fromtext("The quick brown fox jumps over the lazy dog.")
+    morse.export('morse.wav', noise=0.1)
 

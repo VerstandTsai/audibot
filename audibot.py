@@ -45,9 +45,9 @@ async def help(ctx, botname):
 @bot.command()
 async def morse(ctx, *, arg):
     async with ctx.typing():
-        morse_obj = Morse(0.05, 44100, 700)
+        morse_obj = Morse()
         morse_obj.fromtext(arg)
-        morse_obj.export('morse.wav')
+        morse_obj.export('morse.wav', noise=0.1)
     await ctx.send(file=discord.File('morse.wav'))
     os.remove('morse.wav')
 
