@@ -32,7 +32,7 @@ class Morse:
 
     def add_note(self, length, isrest):
         t = np.linspace(0, length, int(self.samplerate * length))
-        channel = 0.5 * np.sin(2 * np.pi * int(not isrest) * self.frequency * t)
+        channel = 0.2 * np.sin(2 * np.pi * int(not isrest) * self.frequency * t)
         note = np.array([channel]).T
         self.audio = np.append(self.audio, note)
 
